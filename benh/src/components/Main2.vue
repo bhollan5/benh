@@ -4,7 +4,7 @@
       <div id="aboveGround">
     <h1 id="BenH" class="threed2">Ben H</h1>
     
-    <p id="about" class="threedDown2 menuitem" onclick="toAbout()">ABOUT</p>
+    <p id="about" class="threedDown2 menuitem" onclick="toAbout()"><router-link class="threedDown2" to="about">ABOUT</router-link></p>
     <p id="projects" class="threedDown2 menuitem" onclick="toProjects()">PROJECTS</p>
     <p id="resume" class="threedDown2 menuitem" onclick="toResume()">RESUME</p>
     
@@ -263,7 +263,7 @@ https://codepen.io/joshnh/pen/ELvdt
 }
 .threedDown2 { 
    color: white; 
-   
+   text-decoration: none;
    text-shadow: -1px 1px lightgray, 
                 -1px 2px lightgray, 
                 -2px 3px lightgray,
