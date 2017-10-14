@@ -4,9 +4,9 @@
       <div id="aboveGround">
     <h1 id="BenH" class="threed5">Ben H</h1>
     
-    <p id="about" class="threedDown5 menuitem" onclick="toAbout()"><router-link class="threedDown5" to="about">ABOUT</router-link></p>
-    <p id="projects" class="threedDown5 menuitem" onclick="toProjects()">PROJECTS</p>
-    <p id="resume" class="threedDown5 menuitem" onclick="toResume()">RESUME</p>
+    <p id="about" class="threedDown5 menuitem"><router-link class="threedDown5" to="about">ABOUT</router-link></p>
+    <p id="projects" class="threedDown5 menuitem" ><router-link class="threedDown5" to="projects">PROJECTS</router-link></p>
+    <p id="resume" class="threedDown5 menuitem" @click="$parent.showResume = true">RESUME</p>
     
     <div id="qpos">
       <div id="qbutton" class="threedDownButton5 menuitem qbutton5" @click="$parent.changeView()">?</div>
@@ -780,7 +780,7 @@ https://codepen.io/joshnh/pen/ELvdt
 }
 .threedDown5 { 
    color: #FF8A85; 
-   
+   text-decoration: none;
    text-shadow: -1px 1px #FFAAA5, 
                 -1px 2px #FFAAA5, 
                 -2px 3px #FFAAA5,

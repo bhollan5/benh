@@ -1,12 +1,13 @@
 <template>
     <div id="bg" class="bg1">
   <div id="container">
+    
       <div id="aboveGround">
     <h1 id="BenH" class="threed1">Ben H</h1>
     
-    <p id="about" class="threedDown1 menuitem" onclick="toAbout()"><router-link class="threedDown1" to="about">ABOUT</router-link></p>
-    <p id="projects" class="threedDown1 menuitem" onclick="toProjects()">PROJECTS</p>
-    <p id="resume" class="threedDown1 menuitem" onclick="toResume()">RESUME</p>
+    <p id="about" class="threedDown1 menuitem" ><router-link class="threedDown1" to="about">ABOUT</router-link></p>
+    <p id="projects" class="threedDown1 menuitem" ><router-link class="threedDown1" to="projects">PROJECTS</router-link></p>
+    <p id="resume" class="threedDown1 menuitem" @click="$parent.showResume = true">RESUME</p>
     
     <div id="qpos">
       <div id="qbutton" class="threedDownButton1 menuitem qbutton1" @click="$parent.changeView()">?</div>

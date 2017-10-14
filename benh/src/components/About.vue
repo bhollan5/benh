@@ -207,5 +207,13 @@ export default {
     }
   }
   
+  @keyframes enterUp {
+    from {
+      transform: translateY(-200px);
+    } to {
+      transform: translateY(0px);
+    }
+  }
+  
   
 </style>

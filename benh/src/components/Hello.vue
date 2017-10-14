@@ -1,5 +1,18 @@
 <template>
   <div >
+    <div id="x" @click="showResume = false" v-if="showResume"></div>
+    <div id="resumePage" v-if="showResume">
+      <div id="resumeContent">
+        <h1>Resume</h1>  
+          <a href="../assets/BenHolland_ResumePDF.pdf" target="_blank">
+            <button>RESUME (PDF)</button></a>
+            <br><br>
+            <a href="BenHolland_Resume.docx"><button>RESUME (.DOCX)</button></a>
+            <br><br>
+            <button onclick="main()">BACK</button>
+      </div>
+    
+    </div>
     <main1 v-if="mainView == 0"></main1>
     <main2 v-if="mainView == 1"></main2>
     <main3 v-if="mainView == 2"></main3>
@@ -29,7 +42,9 @@ export default {
       // holds max amount of views
       viewMax: 4,
       // iterates through views
-      mainView: 0
+      mainView: 0,
+      
+      showResume: false
     }
   },
   methods: {
@@ -1862,25 +1877,26 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b7acb4', end
 }
 
 #x {
-    display: none;
     top: 0px;
     left: 0px;
     background-color: black;
     opacity: .5;
+  z-index: 1000;
     position: absolute;
     height: 200%;
     width: 100%;
+    cursor: pointer;
 }
 
 #resumePage {
     position: absolute;
     z-index: 10000;
-    display: none;
     background-color: beige;
-    margin: 0 auto;
+  left: 30%;
     border: solid 10px darkred;
 /*    height: 40%;*/
     min-width: 350px;
+    min-height: 20px;
     width: 40%;
     margin-top: 30px;
     padding-bottom: 40px;

@@ -4,9 +4,9 @@
       <div id="aboveGround">
     <h1 id="BenH" class="threed2">Ben H</h1>
     
-    <p id="about" class="threedDown2 menuitem" onclick="toAbout()"><router-link class="threedDown2" to="about">ABOUT</router-link></p>
-    <p id="projects" class="threedDown2 menuitem" onclick="toProjects()">PROJECTS</p>
-    <p id="resume" class="threedDown2 menuitem" onclick="toResume()">RESUME</p>
+    <p id="about" class="threedDown2 menuitem" ><router-link class="threedDown2" to="about">ABOUT</router-link></p>
+    <p id="projects" class="threedDown2 menuitem"><router-link class="threedDown2" to="projects">PROJECTS</router-link></p>
+    <p id="resume" class="threedDown2 menuitem" @click="$parent.showResume = true">RESUME</p>
     
     <div id="qpos">
       <div id="qbutton" class="threedDownButton2 menuitem qbutton2" @click="$parent.changeView()">?</div>
