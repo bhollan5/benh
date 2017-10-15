@@ -1,7 +1,7 @@
 <template>
   <div id="about">
     <div id="aboutBox" v-bind:style="{
-                  transform: 'rotateY(' + (-rotate) + 'deg)'
+                  transform: 'rotateY(' + (-rotate + 10) + 'deg)'
                   }">
       <div id="face1" class="face general">
         <div class="faceText">
@@ -40,7 +40,7 @@
             <span class="opt selected"
                   @click="rotate = 270">Music</span>
           </h4>
-          <p>I have played the drums for 8+ years-- two of which were in my current band, <a href="www.thedrawingblanks.com">The Drawing Blanks.</a>  I also play guitar, bass, and sing.  <br><br>Music theory is a big passion of mine- I only ever took one formal music theory class, but learned plenty from making <a href="www.soundcloud.com/benholland21">dumb 8-bit songs on Garageband</a>, and learning from my <a href="https://twitter.com/bandforeveryone">extremely talented friends.</a></p>
+          <p>I have played the drums for 8+ years-- two of which were in my current band, <a href="http://www.thedrawingblanks.com">The Drawing Blanks.</a>  I also play guitar, bass, and sing.  <br><br>Music theory is a big passion of mine- I only ever took one formal music theory class, but learned plenty from making <a href="http://www.soundcloud.com/benholland21">dumb 8-bit songs on Garageband</a>, and learning from my <a href="https://twitter.com/bandforeveryone">extremely talented friends.</a></p>
         </div>
       </div>
       <div id="face3" class="face coding">
@@ -90,6 +90,10 @@
       <div id="face6" class="face"></div>
 -->
     </div>
+    
+    
+    
+    
   </div>
 </template>
 

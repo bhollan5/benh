@@ -4,10 +4,10 @@
     <div id="resumePage" v-if="showResume">
       <div id="resumeContent">
         <h1>Resume</h1>  
-          <a href="../assets/BenHolland_ResumePDF.pdf" target="_blank">
+          <a href="../../static/BenHolland_ResumePDF.pdf" target="_blank">
             <button>RESUME (PDF)</button></a>
             <br><br>
-            <a href="BenHolland_Resume.docx"><button>RESUME (.DOCX)</button></a>
+            <a href="../../static/BenHolland_Resume.docx" target="_blank"><button>RESUME (.DOCX)</button></a>
             <br><br>
             <button onclick="main()">BACK</button>
       </div>
