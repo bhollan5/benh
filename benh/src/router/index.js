@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Hello from '@/components/Hello';
 import About from '@/components/About';
 import Projects from '@/components/Projects';
+import PlanetBuilder from '@/components/PlanetBuilder';
 
 Vue.use(Router)
 
@@ -23,5 +24,10 @@ export default new Router({
       name: 'Projects',
       component: Projects
     },
+    {
+      path: '/planetmaker',
+      name: 'planetBuilder',
+      component: PlanetBuilder
+    }
   ]
 })

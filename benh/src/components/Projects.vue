@@ -85,8 +85,19 @@ export default {
           elevator: 'A Color Guessing Game with Hex Codes',
           thumb: '',
           image: '', 
-          description: 'Hexiguessimal is a simple game I made a long time ago that helps you familiarize yourself with how hex codes convert to real colors!.',
+          description: 'Hexiguessimal is a simple game I made a long time ago that helps you familiarize yourself with how hex codes convert to real colors!',
           link: 'http://hexiguessimal.com',
+          shown: false
+        },
+        {
+          title: 'Planet Maker',
+          position: 'Creator',
+          catagory: 'Code',
+          elevator: 'CSS Custom Planet Maker',
+          thumb: '',
+          image: '', 
+          description: 'Simple vue application to make a fun css planet.  Made this sucker on code pen with jquery originally! I\'m gonna link it to a database so you can store your own planets, eventually - or that\'s the plan anyway.',
+          link: '/#/planetmaker',
           shown: false
         },
       ]
