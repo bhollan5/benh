@@ -18,6 +18,7 @@
     <main3 v-if="mainView == 2"></main3>
     <main4 v-if="mainView == 3"></main4>
     <main5 v-if="mainView == 4"></main5>
+    <main6 v-if="mainView == 5"></main6>
   </div>
 </template>
 
@@ -27,7 +28,9 @@ import main2 from './Main2.vue';
 import main3 from './Main3.vue';
 import main4 from './Main4.vue';
 import main5 from './Main5.vue';
-    
+import main6 from './Main6.vue';
+  
+  
 export default {
   name: 'BenH',
   components: {
@@ -35,7 +38,8 @@ export default {
     main2,
     main3,
     main4,
-    main5
+    main5,
+    main6
   },
   data () {
     return {

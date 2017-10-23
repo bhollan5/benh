@@ -4,6 +4,8 @@ import Hello from '@/components/Hello';
 import About from '@/components/About';
 import Projects from '@/components/Projects';
 import PlanetBuilder from '@/components/PlanetBuilder';
+import Cognote from '@/components/Cognote';
+import NotFound from '@/components/NotFound';
 
 Vue.use(Router)
 
@@ -28,6 +30,21 @@ export default new Router({
       path: '/planetmaker',
       name: 'planetBuilder',
       component: PlanetBuilder
-    }
+    },
+    {
+      path: '/cognote/*',
+      name: 'Cognote',
+      component: Cognote
+    },
+    {
+      path: '/cognote',
+      name: 'CognoteHome',
+      component: Cognote
+    },
+    {
+      path: '/*',
+      name: '404',
+      component: NotFound
+    },
   ]
 })

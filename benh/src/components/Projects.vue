@@ -3,7 +3,7 @@
    <h1>Projects</h1>
     <div id="projUnderline"></div>
     <router-link to="/">Back</router-link>
-    <p>Click on a subject to learn more!</p>
+    <p>Click on a project to expand its details!</p>
     <div id="projectTitles">
       
       <div class="catagory" v-for="catagory in catagories">
@@ -98,6 +98,17 @@ export default {
           image: '', 
           description: 'Simple vue application to make a fun css planet.  Made this sucker on code pen with jquery originally! I\'m gonna link it to a database so you can store your own planets, eventually - or that\'s the plan anyway.',
           link: '/#/planetmaker',
+          shown: false
+        },
+        {
+          title: 'Cognote',
+          position: 'Creator',
+          catagory: 'Code',
+          elevator: 'Note to Flashcard Parser',
+          thumb: '',
+          image: '', 
+          description: 'This is a project I made for Hakron \'17. It takes some notes, and parses them into flashcards. Eventually I want to make this actually work better, and put it up on it\'s own website.',
+          link: '/#/cognote',
           shown: false
         },
       ]

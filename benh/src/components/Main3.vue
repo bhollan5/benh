@@ -347,6 +347,12 @@ https://codepen.io/joshnh/pen/ELvdt
     
   
 }
+  #groundWrapper {
+  position: absolute;
+  top: 0px;
+  transform: translateZ(-1000px);
+  z-index: -1000;
+}
 
 .qbutton3 {
   color: black;

@@ -346,6 +346,12 @@ https://codepen.io/joshnh/pen/ELvdt
         -6px 12px lightgray;
   
 }
+#groundWrapper {
+  position: absolute;
+  top: 0px;
+  transform: translateZ(-1000px);
+  z-index: -1000;
+}
 
 .qbutton2 {
   color: white;
@@ -379,6 +385,7 @@ https://codepen.io/joshnh/pen/ELvdt
 #sphere1 {
   animation: hue-change 20s linear infinite;
   position: absolute;
+  
   width: 75px;
   height:75px;
   background: #7dff63; /* Old browsers */
@@ -411,7 +418,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#683b40', end
   
   margin-left: -90px;
   margin-top: -300px;
-  z-index: -110;
+  z-index: -1100;
     
     -webkit-transition: all 0.12s ease-out;
    -moz-transition:    all 0.12s ease-out;

@@ -872,6 +872,13 @@ background-color: #FFD3B6;
         -6px 18px #DFB396;
   
 }
+  
+#groundWrapper {
+  position: absolute;
+  top: 0px;
+  transform: translateZ(-1000px);
+  z-index: -1000;
+}
 
 .qbutton5 {
   color: black;
