@@ -19,7 +19,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 button {
         background: #4D7498;
         border: #48466D solid 3px;

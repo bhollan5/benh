@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
     .routerLink {
         color: white;
         text-decoration: none;
