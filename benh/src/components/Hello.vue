@@ -18,7 +18,6 @@
     <main3 v-if="mainView == 2"></main3>
     <main4 v-if="mainView == 3"></main4>
     <main5 v-if="mainView == 4"></main5>
-    <main6 v-if="mainView == 5"></main6>
   </div>
 </template>
 
