@@ -7,6 +7,8 @@ import PlanetBuilder from '@/components/PlanetBuilder';
 import Cognote from '@/components/Cognote';
 import NotFound from '@/components/NotFound';
 
+import hacksuSponsors from '@/components/hacksuSponsors'
+
 Vue.use(Router)
 
 export default new Router({
@@ -37,6 +39,11 @@ export default new Router({
       component: Cognote
     },
     {
+      path: '/temp',
+      name: 'hacksuSponsorsIdea',
+      component: hacksuSponsors
+    },
+    {
       path: '/cognote',
       name: 'CognoteHome',
       component: Cognote
@@ -45,6 +52,6 @@ export default new Router({
       path: '/*',
       name: '404',
       component: NotFound
-    },
+    }
   ]
 })
