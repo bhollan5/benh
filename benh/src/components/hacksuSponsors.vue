@@ -127,7 +127,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-/*  z-index: -100;*/
+  z-index: 0;
 }
 
 /* Hide the browser's default checkbox */
