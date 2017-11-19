@@ -2,7 +2,7 @@
 <div id="SponsorForm">
   <h1>Interested in Sponsoring KHE?</h1>
   <p>We want to make sure you feel like you're getting your money's worth when you sponsor our event. We have tons of options for letting you promote your brand, recruit smart, innovative people, and giving back to the tech community!</p>
-  <form action="http://10.14.213.11:3000/test/sponsors/cart" method="post">
+  <form action="#" method="post">
     <div id="form">
       <span style="font-weight:bold;">
         Company Name: 
@@ -127,7 +127,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-  z-index: -100;
+/*  z-index: -100;*/
 }
 
 /* Hide the browser's default checkbox */
