@@ -6,12 +6,14 @@ import Projects from '@/components/Projects';
 import PlanetBuilder from '@/components/PlanetBuilder';
 import Cognote from '@/components/Cognote';
 import NotFound from '@/components/NotFound';
+import automate from '@/components/automate/automate';
 
-import hacksuSponsors from '@/components/hacksuSponsors'
+import hacksuSponsors from '@/components/hacksuSponsors';
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -48,10 +50,18 @@ export default new Router({
       name: 'CognoteHome',
       component: Cognote
     },
+    
+    {
+      path: '/automate',
+      name: 'AutoMate',
+      component: automate
+    },
+    
     {
       path: '/*',
       name: '404',
       component: NotFound
-    }
+    },
+    
   ]
 })
