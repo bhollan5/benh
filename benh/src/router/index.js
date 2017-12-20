@@ -10,6 +10,8 @@ import automate from '@/components/automate/automate';
 
 import hacksuSponsors from '@/components/hacksuSponsors';
 
+import lights from '@/components/lights';
+
 Vue.use(Router)
 
 export default new Router({
@@ -55,6 +57,12 @@ export default new Router({
       path: '/automate',
       name: 'AutoMate',
       component: automate
+    },
+    
+    {
+      path: '/lights',
+      name: 'lights',
+      component: lights
     },
     
     {
