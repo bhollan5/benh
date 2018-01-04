@@ -112,7 +112,7 @@
               = 
               <div class="benchSlot" id="outputSlot"
                    @click="make()">
-                <img v-bind:src="newObject.image" v-if="newObject.catagory != 'nothing'">
+                <img v-bind:src="newObject.image" v-if="newObject.catagory != 'Nothing'">
 <!--                {{newObject}}-->
               </div>
           

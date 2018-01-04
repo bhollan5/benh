@@ -8,6 +8,9 @@ import Cognote from '@/components/Cognote';
 import NotFound from '@/components/NotFound';
 import automate from '@/components/automate/automate';
 
+import recommendations from '@/components/recommendations';
+import btm from '@/components/btm';
+
 import hacksuSponsors from '@/components/hacksuSponsors';
 
 import lights from '@/components/lights';
@@ -63,6 +66,19 @@ export default new Router({
       path: '/lights',
       name: 'lights',
       component: lights
+    },
+    
+    {
+      
+      path: '/recommendations',
+      name: 'recommendations',
+      component: recommendations
+    },
+    
+    {
+      path: '/btm',
+      name: 'Bless this Mess',
+      component: btm
     },
     
     {
