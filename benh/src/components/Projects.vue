@@ -97,7 +97,7 @@ export default {
           thumb: '',
           image: '', 
           description: 'Simple vue application to make a fun css planet.  Made this sucker on code pen with jquery originally! I\'m gonna link it to a database so you can store your own planets, eventually - or that\'s the plan anyway.',
-          link: '/#/planetmaker',
+          link: '/planetmaker',
           shown: false
         },
         {
@@ -108,7 +108,7 @@ export default {
           thumb: '',
           image: '', 
           description: 'This is a project I made for Hakron \'17. It takes some notes, and parses them into flashcards. Eventually I want to make this actually work better, and put it up on it\'s own website.',
-          link: '/#/cognote',
+          link: '/cognote',
           shown: false
         },
       ]

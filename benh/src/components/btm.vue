@@ -12,41 +12,110 @@
                        v-on:keyup.enter="guessPassword()"><br>
       <button @click="guessPassword()">Log in</button>
     </div>
-    <div id="requestPanel" v-if="paused == 'requestPanel'">
-      Request to play {{ currentShow.date }}
+    
+    <div id="newShowPanel" class="panel" v-if="paused == 'newShowPanel'">
+      New Show
+      <div class="requestForm">
+        <span><b>*</b>Show Date:</span>
+        <input type="text"
+               placeholder="Ex: MM-DD-YYYY"
+               class="btmInput"
+               v-model="currentShow.date"
+               v-on:keyup.enter="addShow()">
+      </div>
+      <span style="color: red;margin-left: 20px;"
+            v-if="showDateErr">**Must have a date!</span>
+      <button class="btmButton"
+                  @click="addShow()">Submit!</button>
+    </div>
+    
+    <div id="showReqPanel" class="panel" v-if="paused == 'showReqPanel'">
+    
+    </div>
       
+    <div id="requestPanel" class="panel" v-if="paused == 'requestPanel'">
+      Request to play {{ currentShow.date }}
+      <br>
+      <b>*Required field</b>
       <br>
       <br>
       <div class="requestForm">
-        <span>Band Name:</span>
+        <span><b>*</b>Band Name:</span>
         <input type="text"
                placeholder="Ex: James and the Jameses"
                class="btmInput"
-               v-model="currentBand.name">
+               v-model="currentBand.name"
+               v-on:keyup.enter="submitRequest()">
       </div>
       <span style="color: red;margin-left: 20px;"
             v-if="bandNameErr">**Must have a band name!</span>
       <div class="requestForm">
-        <span>Link to Music (optional):</span>
+        <span>Link to Music:</span>
         <input type="text"
                placeholder="Ex: jamesjams.bandcamp.com"
                class="btmInput"
-               v-model="currentBand.link">
+               v-model="currentBand.link"
+               v-on:keyup.enter="submitRequest()">
       </div>
       <div class="requestForm">
-        <span>Genre (optional):</span>
+        <span>Genre:</span>
         <input type="text"
                placeholder="Ex: Jamescore"
                class="btmInput"
-               v-model="currentBand.genre">
+               v-model="currentBand.genre"
+               v-on:keyup.enter="submitRequest()">
       </div>
       <div class="requestForm">
-        <span>Note (optional):</span>
+        <span>Note:</span>
         <input type="text"
                placeholder="Ex: We need 20 vocal mics lol"
                class="btmInput"
-               v-model="currentBand.note">
+               v-model="currentBand.note"
+               v-on:keyup.enter="submitRequest()">
       </div>
+      <br>
+      
+      <div class="requestForm">
+        <span><b>*</b>Name of Person to Contact:</span>
+        <input type="text"
+               placeholder="Ex: Jim Contactsman"
+               class="btmInput"
+               v-model="currentBand.contactName"
+               v-on:keyup.enter="submitRequest()">
+      </div>
+      <span style="color: red;margin-left: 20px;"
+            v-if="contactNameErr">**Must have a contact name!</span>
+      
+      <div class="requestForm">
+        <span><b>*</b>Contact 1 (Email, phone num, etc):</span>
+        <input type="text"
+               placeholder="Ex: 330-555-6969"
+               class="btmInput"
+               v-model="currentBand.contact1"
+               v-on:keyup.enter="submitRequest()">
+      </div>
+      <span style="color: red;margin-left: 20px;"
+            v-if="contactErr">**Must have a contact listed! How else will we reach you??</span>
+      
+      <div class="requestForm">
+        <span>Contact 2:</span>
+        <input type="text"
+               placeholder="Ex: james@james.james"
+               class="btmInput"
+               v-model="currentBand.contact2"
+               v-on:keyup.enter="submitRequest()">
+      </div>
+      <br>
+      <span>Are you a touring band who wants to spend the night at BTM?</span>
+      <div >
+        <span>If so, tell us how many people want to sleep over:</span>
+        <input type="number"
+               min="0"
+               max="5"
+               v-model="currentBand.beds"
+               v-on:keyup.enter="submitRequest()">
+      </div>
+      
       <button class="btmButton"
                   @click="submitRequest()">Submit!</button>
     </div>
@@ -64,37 +133,83 @@
     Upcoming Shows:
     <div id="showTable">
       <div v-if="shows.length < 1">Could not load any shows :( </div>
-      <div class="row" v-for="show in shows">
-        Date: {{show.date}}
+      <div class="row" v-for="show in shows" v-if="shows != undefined">
+        Date: {{show.date}} -
+        <span v-if="admin">
+          - - - Admin Feature: 
+          <b style="cursor:pointer;text-decoration: underline;"
+             @click="cancelShow(show)">Cancel Show</b>
+        </span>
         <br>
         Bands:
+        <div id="noBands" v-if="show.bands == undefined"
+             class="warning">
+          No Bands booked yet!!
+        </div>
         <div class="rowBand" v-for="band in show.bands">
           <span>
             > {{band.name}} 
-            <span v-if="band.link != undefined">
+            <div v-if="band.link != undefined && band.link != ''"
+                  class="rowDetail">
               -- <a v-bind:href="band.link">Link</a>
-            </span>
+            </div>
+            <div v-if="band.genre != undefined && band.genre != ''"
+                  class="rowDetail">
+              -- Genre: <span style="font-weight: bold">{{ band.genre }}</span>
+            </div>
+            <div v-if="band.note != undefined && band.note != '' && admin"
+                  class="rowDetail">
+              -- Band Note: <span style="font-weight: bold">{{ band.note }}</span>
+            </div>
+            <div v-if="band.beds > 0 && admin"
+                  class="rowDetail">
+              -- Beds requested: <span style="font-weight: bold">{{ band.beds }}</span>
+            </div>
           </span>
           <button class="btmButton"
-                  v-if="admin">Remove band from show (not impl.)</button>
+                  v-if="admin"
+                  @click="removeBandFromShow(band, show)">Remove band from show</button>
         </div>
         
         <b v-if="admin">Admin feature - The following bands want to play this show:</b>
+        
+        <div id="noBandReqs" v-if="show.bandRequests == undefined && admin"
+             class="warning">
+          No additional bands requested this date yet!
+        </div>
         <div class="rowBand requests" 
              v-for="band in show.bandRequests"
              v-if="admin">
           <span>
             > {{band.name}} 
-            <span v-if="band.link != undefined">
-              -- <a v-bind:href="band.link">Link</a>
-            </span>
+            <div v-if="band.link != undefined && band.link != ''"
+                 class="rowDetail">
+              -- <a v-bind:href="band.link"
+                    >Link</a>
+            </div>
+            <div v-if="band.genre != undefined && band.genre != ''"
+                  class="rowDetail">
+              -- Genre: <span style="font-weight: bold">{{ band.genre }}</span>
+            </div>
+            <div v-if="band.note != undefined && band.note != '' && admin"
+                  class="rowDetail">
+              -- Band Note: <span style="font-weight: bold">{{ band.note }}</span>
+            </div>
+            
+            <div v-if="band.beds > 0 && admin"
+                  class="rowDetail">
+              -- Beds requested: <span style="font-weight: bold">{{ band.beds }}</span>
+            </div>
           </span>
           <span>
-            <button class="btmButton">Add Band to Show (not impl.)</button>
-            <button class="btmButton">Reject Band (not impl.)</button>
+            <button class="btmButton"
+                    @click="addBandToShow(band, show)">Add Band to Show</button>
+            <button class="btmButton"
+                    @click="rejectBand(band, show)">Reject Band</button>
           </span>
         </div>
-        <button v-if="admin" class="btmButton">Add another band (not implemented yet)</button>
+        <button v-if="admin" class="btmButton"
+                @click="requestToPlay(show)">Add another band possibility</button>
         
         <br>
         <button class="btmButton" v-if="!admin"
@@ -105,7 +220,10 @@
     <button class="btmButton"
             v-if="!admin">Want to play at BTM on another date? Click here! (not implemented yet)</button>
     <button class="btmButton"
-            v-if="admin">Add show (not implemented yet)</button>
+            v-if="admin"
+            @click="paused = 'newShowPanel'">
+      Add show 
+    </button>
   
     
     <div id="adminLogin" @click="adminLogin()"
@@ -138,15 +256,29 @@
         admin: false,
         paused: 'none',
         passGuess: '',
-        currentShow: {},
+        
         bandNameErr: false,
+        contactNameErr: false,
+        contactErr: false,
+        
+        showDateErr: false,
         
         currentBand: {
           name: '',
           link: '',
           genre: '',
-          note: ''
+          note: '',
+          contactName: '',
+          contact1: '',
+          contact2: '',
           
+          beds: 0
+          
+        },
+        
+        currentShow: {
+          date: '',
+          index: ''
         }
       }  
     },
@@ -186,16 +318,26 @@
         this.paused="requestPanel";
       },
       
-      submitRequest: function() {
+      submitRequest: function(show) {
         if (this.currentBand.name == '') {
           this.bandNameErr = true;
+        }
+        if (this.currentBand.contactName == '') {
+          this.contactNameErr = true;
+        }
+        if (this.currentBand.contact1 == '') {
+          this.contactErr = true;
+        }
+        if (this.bandNameErr || this.contactNameErr || this.contactErr) {
           return;
         }
+        
         this.bandNameErr = false;
+        this.contactNameErr = false;
+        this.contactErr = false;
         this.paused="none";
         
         var currentShowIndex = this.currentShow.index;
-        var nextBandIndex = this.currentShow.bandRequests.length;
         
         var database = firebase.database();
         var refStr = 'shows/' + currentShowIndex + '/bandRequests';
@@ -206,11 +348,113 @@
 //        Found this wild thing here:
 //        https://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html
         var pushKey = writeRef.push();
+        var keyVal = pushKey.key;
         
+        var keyPath = writeRef.toString();
         pushKey.set({
           "name": vm.currentBand.name,
-          "link": vm.currentBand.link
+          "link": vm.currentBand.link,
+          "genre": vm.currentBand.genre,
+          "note": vm.currentBand.note,
+          "contactName": vm.currentBand.contactName,
+          "contact1": vm.currentBand.contact1,
+          "contact2": vm.currentBand.contact2,
+          "key": keyVal
         })
+      },
+      
+      addBandToShow: function(band, show) {
+        // Getting database
+        var database = firebase.database();
+        
+        // Removing band from band Requests
+        var bandReqRef = database.ref('shows/' + show.index + '/bandRequests/' + band.key);
+        bandReqRef.remove();
+        
+        // Putting band info into /bands
+        var bandRef = database.ref('shows/' + show.index + '/bands/' + band.key);
+        bandRef.set({
+          name: band.name,
+          genre: band.genre,
+          key: band.key,
+          note: band.note,
+          link: band.link,
+          
+          contactName: band.contactName,
+          contact1: band.contact1,
+          contact2: band.contact2
+        });
+        
+      },
+      
+      removeBandFromShow: function(band, show) {
+        // Getting database
+        var database = firebase.database();
+        
+        // Removing band from band Requests
+        var bandReqRef = database.ref('shows/' + show.index + '/bands/' + band.key);
+        bandReqRef.remove();
+        
+        // Putting band info into /bands
+        var bandRef = database.ref('shows/' + show.index + '/bandRequests/' + band.key);
+        bandRef.set({
+          name: band.name,
+          genre: band.genre,
+          key: band.key,
+          note: band.note,
+          link: band.link,
+          
+          contactName: band.contactName,
+          contact1: band.contact1,
+          contact2: band.contact2
+        });
+      },
+      
+      rejectBand: function(band, show) {
+        if (confirm("Are you sure you want to reject this band?")) {
+          
+          var database = firebase.database();
+        
+          var bandReqRef = database.ref('shows/' + show.index + '/bandRequests/' + band.key);
+          bandReqRef.remove();
+        }
+      },
+      
+      addShow: function() {
+        if (this.currentShow.date == '') {
+          this.showDateErr = true;
+        }
+        
+        this.showDateErr = false;
+        this.paused = "none";
+        
+        var currentShowIndex = this.currentShow.index;
+  
+        var database = firebase.database();
+        var writeRef = database.ref('shows');
+        
+        var vm = this;
+        
+//        Found this wild thing here:
+//        https://firebase.googleblog.com/2014/04/best-practices-arrays-in-firebase.html
+        var pushKey = writeRef.push();
+        var keyVal = pushKey.key;
+        
+        var keyPath = writeRef.toString();
+        pushKey.set({
+          "date": vm.currentShow.date,
+          "index": keyVal
+        })
+      },
+      
+      cancelShow(show) {
+        if (confirm("Are you sure you want to cancel this show? This will delete all related data permanently.")) {
+          
+          var database = firebase.database();
+        
+          var showRef = database.ref('shows/' + show.index);
+          showRef.remove();
+        }
       }
     }
     
@@ -252,12 +496,13 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     
     text-align: left;
     padding: 60px;
     padding-left: 15%;
     padding-right: 25%;
+    padding-bottom: 300px;
     background: #EAFFD0;
   }
   
@@ -265,7 +510,6 @@
     position: absolute;
     width: 100%;
     height: 100px;
-    font-family: "Cast Iron";
     font-size: 4vw;
     letter-spacing: 5px;
 /*    overflow: wrap;*/
@@ -280,12 +524,14 @@
   #showTable {
     border: solid #FCE38A 3px;
     width: 70%;
-    background: white;
+    background: #B5FFF3;
   }
   
   .row {
     padding: 10px;
     border: solid #F38181 2px;
+    margin: 20px;
+    background: white;
   }
   
   .rowBand {
@@ -311,7 +557,7 @@
   .requestForm {
     display: flex;
     justify-content: space-between;
-    width: 400px;
+    width: 500px;
   }
   .btmInput {
     width: 200px;
@@ -328,16 +574,20 @@
   }
   
   #adminLoginPanel {
+    top: 30px;
     padding: 30px;
-    position: absolute;
+    position: fixed;
     left: 15%;
     z-index: 100;
-    width: 40%;
+    min-width: 40%;
     min-height: 200px;
     background: #95E1D3;
     border: solid 5px #EAFFD0;
   }
   #requestPanel {
+  }
+  
+  .panel {
     padding: 30px;
     position: absolute;
     left: 15%;
@@ -352,5 +602,14 @@
     color: #F38181;
   }
 
+  .warning {
+    color: #F38181;
+    font-style: italic;
+    margin-left: 30px;
+  }
+  
+  .rowDetail {
+    margin-left: 30px;
+  }
 
 </style>
