@@ -26,9 +26,6 @@
 </style>
 
 <script>
-  import Vue from 'Vue';
-
-  
   
 export default {
   props: {

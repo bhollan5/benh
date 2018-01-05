@@ -754,8 +754,6 @@ import player from './player.vue';
 import plot from './plot.vue';
 import bot from './bot.vue';
   
-import Vue from 'Vue';
-
 // CONTROLS
 var keys = {
   UP: 38,     // Move, etc
