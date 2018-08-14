@@ -9,11 +9,17 @@ import NotFound from '@/components/NotFound';
 import automate from '@/components/automate/automate';
 
 import recommendations from '@/components/recommendations';
+
+import ThingsThatAreGood from '@/components/good/ThingsThatAreGood';
 import btm from '@/components/btm';
 
 import hacksuSponsors from '@/components/hacksuSponsors';
 
 import lights from '@/components/lights';
+
+import mojiwars from '@/components/emojiwars/mojiwars';
+
+import jams from '@/components/jams/jams';
 
 Vue.use(Router)
 
@@ -34,6 +40,11 @@ export default new Router({
       path: '/projects',
       name: 'Projects',
       component: Projects
+    },
+    {
+      path: '/goodthings',
+      name: 'goodThings',
+      component: ThingsThatAreGood
     },
     {
       path: '/planetmaker',
@@ -79,6 +90,18 @@ export default new Router({
       path: '/btm',
       name: 'Bless this Mess',
       component: btm
+    },
+    
+    {
+      path: '/mw',
+      name: 'mojiwars',
+      component: mojiwars
+    },
+    
+    {
+      path: '/jams',
+      name: 'jams',
+      component: jams
     },
     
     {

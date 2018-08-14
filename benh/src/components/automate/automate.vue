@@ -155,7 +155,10 @@
           </div>
         
         </div>
-        <div id="botMenu" v-if="pauseMenu == 'botMenu'">
+        <programming-interface v-if="pauseMenu == 'botMenu'"
+                    :bot="selectedItem">
+        </programming-interface>
+        <!---<div id="botMenu" v-if="pauseMenu == 'botMenu'">
         <span style="text-decoration:underline;cursor:pointer;"
                   @click="pauseMenu = 'main'">Back to Main Menu</span>
             <span>Bot Control Panel</span>
@@ -174,7 +177,7 @@
           </div>
           
           <div id="equipBotText" @click="equipItem()">Equip This Bot</div>
-        </div>
+        </div>-->
       </div>
       
       <div id="itemEquippedOnGrid">
@@ -688,64 +691,7 @@
     width: 33px;
     height: 33px;
   }
-  #botMenu {
-    padding: 5px;
-    display: flex;
-    justify-content: space-between;
-  }
-  #botProfile {
-    position: absolute;
-    top: 60px;
-    left: 15px;
-    text-align: left;
-    font-size: 12px;
-  }
-  .botPic {
-    image-rendering: pixelated;
-    height: 100px;
-    width: 100px;
-    border: solid black 2px;
-  }
-  #botNameInput {
-    width: 60px;
-    outline: none;
-    border: none;
-    border-bottom: solid black 1px;
-  }
-  #botCode {
-    position: absolute;
-    left: 140px;
-    top: 60px;
-    width: 190px;
-    height: 250px;
-    background: #efefef;
-    border: solid black 2px;
-    padding: 1px;
-    overflow: scroll;
-  }
-  .botCodeLine {
-    background: white;
-    padding-left: 4px;
-    input {
-      background: none;
-      border: none;
-      outline: none;
-      border-bottom: lightgray solid 1px;
-      height: 15px;
-      width: 150px;
-    }
-    input:focus {
-      border-bottom: black solid 1px;
-    }
-  }
-  #equipBotText {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    font-size: 14px;
-    text-decoration: underline;
-    cursor: pointer;
-  }
+  
 
 </style> 
 
@@ -753,6 +699,8 @@
 import player from './player.vue';
 import plot from './plot.vue';
 import bot from './bot.vue';
+  
+import programmingInterface from './programmingInterface.vue';
   
 // CONTROLS
 var keys = {
@@ -787,7 +735,8 @@ export default {
   components: {
     player,
     plot,
-    bot
+    bot,
+    programmingInterface
   },
   
   mounted: function() {
@@ -1038,7 +987,7 @@ export default {
       // The following dialogue gets displayed only at the beginning of the game
       dialogue: ['<b><u>Hey you!</b></u> Read this and then press <b>enter</b>!', 
                  'I\'m gonna tell you how to play this game. I know, game instructions are boring, but I promise it\'ll get better!', 
-                 'So the controls are easy - <b>arrow keys</b> to move, <b>P</b> or <b>X</b> to pause and look at your menu, and hold down <b>X</b> or <b>Space</b> and press the <b>arrow keys</b> to interact with things!', 
+                 'So the controls are easy - <b>arrow keys</b> to move, <b>P</b> or <b>X</b> to pause and look at your menu, and hold down <b>Z</b> or <b>Space</b> and press the <b>arrow keys</b> to interact with things!', 
                  'Go over to that sign, hold down <b>Z</b>, and try to interact with it!', 
                  ''
       ],
@@ -1543,7 +1492,8 @@ export default {
       this.paused = false;
     },
     
-    newLine: function(bot) {
+    newLine: function() {
+      var bot = this.selectedItem;
       var newLine = {
               id: (bot.code.length + 1),
               text: '',
