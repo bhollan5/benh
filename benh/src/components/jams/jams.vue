@@ -53,7 +53,7 @@ export default{
 
       noteFreq: this.createNoteTable(),
       
-      fugueBassScore: [ 'sawtooth',
+      fugueBassScore: [ 'square',
                        [1, 'G', 600],
                        [2, 'D', 600],
                        [1, 'A#', 900],
@@ -98,7 +98,66 @@ export default{
                        [1, 'G', 150],
                        [1, 'F#', 150],
                        [1, 'A', 150],
-                       [1, 'G', 600]
+                       [1, 'G', 150],
+                       [1, 'D', 150],
+                       [1, 'G', 150],
+                       [1, 'A', 150],
+                       [1, 'A#', 150],
+                       [2, 'C', 150],
+                       [2, 'D', 150],
+                       [2, 'E', 150],
+                       
+                       [2, 'F', 150],
+                       [2, 'E', 150],
+                       [2, 'D', 150],
+                       [2, 'F', 150],
+                       [2, 'E', 150],
+                       [2, 'D', 150],
+                       [2, 'C#', 150],
+                       [2, 'E', 150],
+                       [2, 'D', 150],
+                       ['rest', 'rest', 150],
+                       [1, 'A', 150],
+                       ['rest', 'rest', 150],
+                       [2, 'D', 150],
+                       ['rest', 'rest', 150],
+                       [2, 'E', 150],
+                       ['rest', 'rest', 150],
+                       [2, 'F', 150],
+                       [2, 'G', 150],
+                       [2, 'F', 150],
+                       [2, 'G', 150],
+                       [2, 'A', 75],
+                       [2, 'G', 75],
+                       [2, 'A', 75],
+                       [2, 'G', 75],
+                       [2, 'A', 75],
+                       [2, 'G', 75],
+                       [2, 'F', 75],
+                       [2, 'G', 75],
+                       [2, 'A', 150],
+                       [2, 'G', 150],
+                       [2, 'A', 150],
+                       [2, 'A#', 150],
+                       [2, 'A', 150],
+                       [2, 'G', 150],
+                       [2, 'F', 150],
+                       [2, 'E', 150],
+                       
+                       [2, 'F', 150],
+                       [2, 'A', 150],
+                       [2, 'G', 150],
+                       [2, 'A', 150],
+                       [2, 'C', 150],
+                       [2, 'A', 150],
+                       [2, 'G', 150],
+                       [2, 'A', 150],
+                       [2, 'D', 150],
+                       [2, 'A', 150],
+                       [2, 'G', 150],
+                       [2, 'A', 150],
+                       
+                       
                       ]
     }
   },
@@ -152,6 +211,17 @@ export default{
       // Grabbing the current note. It will be an array like this: 
       // [octave, note, duration]
       var noteDetails = this[songname][i];
+      var vm = this;
+      
+      // Handling rests:
+      if (noteDetails[1] == 'rest') {
+        setTimeout(function() {
+          if (i < vm[songname].length - 1){
+            vm.noteIterator(songname, i + 1)
+          }
+        }, noteDetails[2]);
+        return;
+      }
       
       // Now getting the corresponding frequency integer from noteFreq table:
       var freq = this.noteFreq[noteDetails[0]][noteDetails[1]];
@@ -166,10 +236,11 @@ export default{
         note.start();
         note.connect(this.audioCtx.destination);
         Vue.set(this.noteFreq[noteDetails[0]][noteDetails[1]], 3, true);
-        var vm = this;
+
         setTimeout(function() {
           note.stop();
           Vue.set(vm.noteFreq[noteDetails[0]][noteDetails[1]], 3, false);
+          // Remember that the variable 'vm' is just 'this'
           if (i < vm[songname].length - 1){
             vm.noteIterator(songname, i + 1)
           }
@@ -202,6 +273,7 @@ $blue: #44fadd;
 
 
 #jams {
+  perspective: 700px;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -221,8 +293,10 @@ $blue: #44fadd;
   }
 
 #container {
+  transform: rotatey(-20deg) rotatex(-0deg);
+    transform-style: preserve-3d;
   position: absolute;
-  background: #b767ff;
+  background: linear-gradient(#081962, #182952);
   width: 50%;
   margin-left: 35%;
   height: 30vh;
@@ -235,7 +309,9 @@ $blue: #44fadd;
 }
   
   #notes {
-    margin-top: 100px;
+    transform: rotatey(10deg) rotatex(-0deg);
+    transform-style: preserve-3d;
+    margin-top: 200px;
     margin-left: 10%;
   }
  
@@ -252,8 +328,11 @@ $blue: #44fadd;
   }
   .blue {
     background: $blue;
+/*
     box-shadow: 1px 1px 0px $yellow,
       2px 2px 0px $yellow;
-    margin: 0px 4px 4px 0px;
+*/
+/*    margin: 0px 0px 4px 4px;*/
+    transform: translatez(-20px);
   }
 </style>
