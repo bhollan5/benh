@@ -10,11 +10,14 @@
         <h3>{{ catagory }}</h3>
         <div class="proj" v-for="project in projects"
              v-if="project.catagory == catagory">
-          <div class="projTitle" @click="project.shown = !project.shown">
+          <div class="projTitle" @click="shown = project.id">
             <span class="title"> {{ project.title }}</span>
             <span class="elevator"> {{ project.elevator }}</span>
           </div>
-          <div class="projDetails" v-if="project.shown">
+          <div class="projDetails" v-if="true"
+               :class="{
+                       expanded: project.id == shown
+                       }">
             <span v-if="project.position != ''">
               <b>Position:</b> {{ project.position }}<br>
             </span>
@@ -39,10 +42,14 @@ export default {
   name: 'Projects',
   data () {
     return {
+      // Stores the id of the currently displayed project:
+      shown: '',
+      
       catagories: [
         'Music',
         'Code',
-        'Politics'
+        'Politics',
+        'In Progress'
       ],
       projects: [
         {
@@ -54,7 +61,7 @@ export default {
           image: '', 
           description: 'We\'re an indie/alt band! We\'ve been playing for 3 years, and have music on Spotify, iTunes, Bandcamp and Soundcloud. You can also like us on Facebook and Twitter',
           link: 'http://thedrawingblanks.com',
-          shown: false
+          id: 'tdb'
         },
         {
           title: 'Hacksu',
@@ -65,7 +72,7 @@ export default {
           image: '', 
           description: 'We meet every Tuesday at 7pm in the Kent Honors College and teach a lesson about two lessons about programming -- a beginner lesson and an advanced lesson. I often teach webdev, python, git, and node. We also have free pizza!',
           link: 'http://hacksu.com',
-          shown: false
+          id: 'hacksu'
         },
         {
           title: 'Funkhaus Berlin',
@@ -76,7 +83,7 @@ export default {
           image: '', 
           description: 'Funkhaus Berlin is consistently the highest rated political talk show in the history of the spoken word! Wow!  We talk about politics on a national and local scale, and what you can do to help. Funkhaus Berlin can be streamed from our website every Saturday from midnight to 2am. We also archive our episodes on bandcamp.',
           link: 'http://funkhaus.stream',
-          shown: false
+          id: 'fb'
         },
         {
           title: 'Hexiguessimal',
@@ -87,7 +94,7 @@ export default {
           image: '', 
           description: 'Hexiguessimal is a simple game I made a long time ago that helps you familiarize yourself with how hex codes convert to real colors!',
           link: 'http://hexiguessimal.com',
-          shown: false
+          id: 'hex'
         },
         {
           title: 'Planet Maker',
@@ -98,7 +105,7 @@ export default {
           image: '', 
           description: 'Simple vue application to make a fun css planet.  Made this sucker on code pen with jquery originally! I\'m gonna link it to a database so you can store your own planets, eventually - or that\'s the plan anyway.',
           link: '/planetmaker',
-          shown: false
+          id: 'pm'
         },
         {
           title: 'Cognote',
@@ -109,8 +116,24 @@ export default {
           image: '', 
           description: 'This is a project I made for Hakron \'17. It takes some notes, and parses them into flashcards. Eventually I want to make this actually work better, and put it up on it\'s own website.',
           link: '/cognote',
-          shown: false
+          id: 'cognote'
         },
+        
+        {
+          title: 'AutoMate',
+          position: 'Creator',
+          catagory: 'In Progress', 
+          elevator: 'Adventures with Turing Complete Pals',
+          thumb: '',
+          image: '', 
+          description: 'Obviously not finished yet. In this game, you gather resources to create colorful robots, who you can program to solve various puzzles or make beautiful machines.',
+          link: '/automate',
+          id: 'automate',
+        },
+        
+        {
+          
+        }
       ]
     }
   }
@@ -130,7 +153,7 @@ export default {
   #projectTitles {
     width: 600px;
     margin: auto;
-    cursor: pointer;
+/*    cursor: pointer;*/
     
 /*    border: solid red 1px;*/
   }
@@ -146,7 +169,7 @@ export default {
   .projTitle {
     display: flex;
     justify-content: space-between;
-    
+    cursor: pointer;
   }
   .title {
     font-weight: bold;
@@ -154,8 +177,15 @@ export default {
   }
   
   .projDetails {
-    margin-top: 15px;
+    margin-top: 0px;
     text-align: left;
+    max-height: 0px;
+    overflow-y: hidden;
+    transition-duration: 1s;
+  }
+  .expanded {
+    margin-top: 15px;
+    max-height: 200px;;
   }
   
   h1 {
