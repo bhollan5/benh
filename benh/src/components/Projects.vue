@@ -132,8 +132,16 @@ export default {
         },
         
         {
-          
-        }
+          title: 'Emoji Wars',
+          position: 'Creator',
+          catagory: 'In Progress', 
+          elevator: 'Sort of like pokemon but way way worse',
+          thumb: '',
+          image: '', 
+          description: 'Not finished. Inspired by rock paper scissors like games, you take turns selecting emojis which stand for different moves, and battle your opponent.',
+          link: '/mw',
+          id: 'mw',
+        },
       ]
     }
   }
@@ -141,6 +149,10 @@ export default {
 </script>
 
 <style scoped>
+  #projectsContainer {
+    padding-bottom: 50vh;
+  }
+  
   #projUnderline {
     border: black solid 1px;
     height: 0px;
@@ -153,6 +165,9 @@ export default {
   #projectTitles {
     width: 600px;
     margin: auto;
+    @media screen and (max-width: 600px) {
+      width: auto;
+    }
 /*    cursor: pointer;*/
     
 /*    border: solid red 1px;*/
@@ -160,16 +175,24 @@ export default {
   
   .proj {
     width: 500px;
+    @media screen and (max-width: 600px) {
+      width: 100% !important;
+      margin: 0px;
+    }
     transition-duration: 1s;
     margin: auto;
     
     border: solid black 1px;
     padding: 10px 20px 10px 20px;
+    cursor: pointer;
+
   }
   .projTitle {
     display: flex;
     justify-content: space-between;
-    cursor: pointer;
+  }
+  .proj:hover {
+    box-shadow: 0px 0px 10px pink inset;
   }
   .title {
     font-weight: bold;
