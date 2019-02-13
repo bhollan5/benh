@@ -21,6 +21,8 @@ import mojiwars from '@/components/emojiwars/mojiwars';
 
 import jams from '@/components/jams/jams';
 
+import turing from '@/components/turing/turing';
+
 Vue.use(Router)
 
 export default new Router({
@@ -40,6 +42,11 @@ export default new Router({
       path: '/projects',
       name: 'Projects',
       component: Projects
+    },
+    {
+      path: '/turing',
+      name: 'Turing',
+      component: turing
     },
     {
       path: '/goodthings',
