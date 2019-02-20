@@ -3,11 +3,16 @@
   <div id="machine-display" class="turing-window">
     <turing-header text="YOUR MACHINE"></turing-header>
     <div class="turing-window-content">
+      <img src="../../../static/turing/icons/edit.png" id="machine-edit-button" v-if="!inputMode"
+        @click="inputMode = !inputMode">
+      <img src="../../../static/turing/icons/okay.png" id="machine-edit-button" v-else
+        @click="inputMode = !inputMode">
       <div id="cells">
         <div class="cell" v-for="(cell, i) in cells" :style="{
             left: i * 50 + 'px'
           }">
-          <input v-if="inputMode" v-model="cells[i]">
+          <input v-if="inputMode" v-model="cells[i]" maxlength="1" onclick="this.select()"
+            onkeyup="this.value = this.value.toUpperCase();">
           <span v-if="!inputMode && cell != 'B'">{{cell}}</span>
         </div>
         <div class="machine" :style="{
@@ -28,8 +33,22 @@
 
   <div id="tuples" class="turing-window">
     <turing-header text="TUPLE INSTRUCTIONS"></turing-header>
-    <div class="turing-window-content">
+    <div id="tuple-window-content" class="turing-window-content">
 
+      <div id="tuples-column">
+        <div id="column-header">
+          <span>state</span>
+          <span>read</span>
+          <span>action</span>
+          <span>goto</span>
+        </div>
+
+        <div class="state-container">
+
+        </div>
+
+
+      </div>
     </div>
   </div>
 
@@ -48,7 +67,7 @@ import turingHeader from '@/components/turing/turingHeader';
 export default {
   data() {
     return {
-      inputMode: true,
+      inputMode: false,
       cells: [],
       headPosition: 15,
       currentState: 0,
@@ -75,6 +94,10 @@ export default {
 div {
   font-family: VCR;
 }
+
+//
+//  General styling & Layout
+//
 
 #turing-interface {
   font-family: VCR;
@@ -110,6 +133,20 @@ div {
 
 .turing-window {
   border: solid 2px black;
+  position: relative;
+}
+
+//
+//  YOUR MACHINE WINDOW:
+//
+
+#machine-edit-button {
+  position: absolute;
+  z-index: 10;
+  background: white;
+  right: 20px;
+  bottom: 20px;
+  cursor: pointer;
 }
 
 #cells {
@@ -130,8 +167,10 @@ div {
   position: absolute;
 
   input {
-    
+    font-size: 18px;
     width: 90%;
+    font-family: VCR;
+
   }
 }
 
@@ -141,6 +180,30 @@ div {
   height: 30px;
   top: 55px;
   position: absolute;
+  transition-duration: 1s;
+}
+
+//
+//  Tuple display
+//
+
+#column-header {
+  border-bottom: solid black 2px;
+  margin: 20px;
+}
+
+#tuple-window-content {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  width: 100%;
+  height: calc(100% - 20px);
+}
+
+.state-container {
+  border: solid black 2px;
+  width: 95%;
+  margin: 20px 2.5%;
+  height: 30px;
 }
 
 </style>
