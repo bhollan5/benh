@@ -3,7 +3,19 @@
   <div id="machine-display" class="turing-window">
     <turing-header text="YOUR MACHINE"></turing-header>
     <div class="turing-window-content">
-
+      <div id="cells">
+        <div class="cell" v-for="(cell, i) in cells" :style="{
+            left: i * 50 + 'px'
+          }">
+          <input v-if="inputMode" v-model="cells[i]">
+          <span v-if="!inputMode && cell != 'B'">{{cell}}</span>
+        </div>
+        <div class="machine" :style="{
+            left: headPosition * 50 + 'px'
+          }">
+        
+        </div>
+      </div>
     </div>
   </div>
 
@@ -36,14 +48,15 @@ import turingHeader from '@/components/turing/turingHeader';
 export default {
   data() {
     return {
-      machine: [],
-      headPosition: 0,
+      inputMode: true,
+      cells: [],
+      headPosition: 15,
       currentState: 0,
     }
   },
   mounted() {
     for (let i = 0; i < 100; i++) {
-      this.machine.push('B');
+      this.cells.push('B');
     }
   },
   components: {
@@ -71,7 +84,7 @@ div {
   position: absolute;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 5% 20% 75%;
+  grid-template-rows: 5% 25% 70%;
   grid-column-gap: 50px;
   grid-row-gap: 50px;
   padding: 50px;
@@ -85,6 +98,7 @@ div {
   grid-area: about
 }
 #machine-display {
+  overflow-y: scroll;
   grid-area: machine;
 }
 #tuples {
@@ -96,6 +110,37 @@ div {
 
 .turing-window {
   border: solid 2px black;
+}
+
+#cells {
+  position: relative;
+  height: 120px;
+  // border: solid red 2px;
+  overflow: scroll;
+}
+
+.cell {
+  top: 10px;
+  padding-top: 10px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+
+  border-bottom: solid black 2px;
+  position: absolute;
+
+  input {
+    
+    width: 90%;
+  }
+}
+
+.machine {
+  border-bottom: solid red 2px;
+  width: 30px;
+  height: 30px;
+  top: 55px;
+  position: absolute;
 }
 
 </style>
