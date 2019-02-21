@@ -27,7 +27,8 @@
   <div id="controls" class="turing-window">
     <turing-header text="CONTROLS"></turing-header>
     <div class="turing-window-content">
-      <img src="../../../static/turing/icons/play.png" class="control-button">
+      <img src="../../../static/turing/icons/play.png" class="control-button" @click="beginMachine()" v-if="!machinePlay">
+      <img src="../../../static/turing/icons/pause.png" class="control-button" @click="pauseMachine()" v-else>
       <img src="../../../static/turing/icons/next.png" class="control-button" @click="doStep()">
       <img src="../../../static/turing/icons/ff.png" class="control-button">
     </div>
@@ -43,7 +44,7 @@
   <div id="about" class="turing-window">
     <turing-header text="ABOUT"></turing-header>
     <div class="turing-window-content">
-
+      <div>total steps: {{totalSteps}}</div>
     </div>
   </div>
 
@@ -95,7 +96,7 @@ import Vue from 'vue';
 export default {
   data() {
     return {
-      inputMode: false,
+      // Machine variables:
       cells: [],
       headPosition: 3,
       currentState: 0,
@@ -115,7 +116,15 @@ export default {
             },
           ]
         }
-      ]
+      ],
+
+      // Stats:
+      totalSteps: 0,
+
+      // Menu options:
+      inputMode: false,
+      machinePlay: false,
+
     }
   },
   mounted() {
@@ -128,10 +137,11 @@ export default {
   },
   methods: {
     doStep() {
+      this.totalSteps++;
+
       let symbol = this.cells[this.headPosition];       // The symbol we're reading
       let state = this.states[this.currentState];       // The state we're in 
-      console.log(state);
-      console.log(symbol);
+
       for (let i in state.tuples) {                     // Looking at each tuple in that state
         if (state.tuples[i].read == symbol) {           // Finding the tuple relating to the symbol we read
 
@@ -146,6 +156,21 @@ export default {
           this.currentState = state.tuples[i].goto;     // change states
         }
       }
+    },
+    beginMachine() {
+      this.machinePlay = true;
+      this.machineLoop(1000)
+    },
+    machineLoop(speed) {
+      this.doStep();
+      setTimeout(() => {
+        if (this.machinePlay) {
+          this.machineLoop(speed);
+        }
+      }, speed);
+    },
+    pauseMachine() {
+      this.machinePlay = false;
     }
   }
 }
