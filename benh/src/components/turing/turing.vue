@@ -24,8 +24,24 @@
     </div>
   </div>
 
+  <div id="controls" class="turing-window">
+    <turing-header text="CONTROLS"></turing-header>
+    <div class="turing-window-content">
+      <img src="../../../static/turing/icons/play.png" class="control-button">
+      <img src="../../../static/turing/icons/next.png" class="control-button" @click="doStep()">
+      <img src="../../../static/turing/icons/ff.png" class="control-button">
+    </div>
+  </div>
+
   <div id="alphabet" class="turing-window">
-    <turing-header text="ABOUT/ALPHABET"></turing-header>
+    <turing-header text="ALPHABET"></turing-header>
+    <div class="turing-window-content">
+
+    </div>
+  </div>
+
+  <div id="about" class="turing-window">
+    <turing-header text="ABOUT"></turing-header>
     <div class="turing-window-content">
 
     </div>
@@ -43,8 +59,19 @@
           <span>goto</span>
         </div>
 
-        <div class="state-container">
 
+        <div class="state-container" v-for="(state, i) in states" :style="{
+          height: state.tuples.length * 40 + 'px'
+        }"> <!-- Calculating height this way so we can match height with the description box easily -->
+          <div class="state-container-label">Q{{i}} tuples</div>
+          <div class="state-tuple-display" v-for="tuple in state.tuples">
+            <span>&lt;</span>
+            <span class="tuple-value">Q{{i}}</span>
+            <span class="tuple-value">{{tuple.read}}</span>
+            <span class="tuple-value">{{tuple.action}}</span>
+            <span class="tuple-value">Q{{tuple.goto}}</span>
+            <span>&gt;</span>
+          </div>
         </div>
 
 
@@ -63,14 +90,32 @@
 
 <script>
 import turingHeader from '@/components/turing/turingHeader';
+import Vue from 'vue';
 
 export default {
   data() {
     return {
       inputMode: false,
       cells: [],
-      headPosition: 15,
+      headPosition: 3,
       currentState: 0,
+      states: [
+        {
+          description: '',
+          tuples: [
+            {
+              read: 'B',
+              action: '1',
+              goto: 0
+            },
+            {
+              read: '1',
+              action: 'R',
+              goto: 0
+            },
+          ]
+        }
+      ]
     }
   },
   mounted() {
@@ -80,6 +125,28 @@ export default {
   },
   components: {
     turingHeader
+  },
+  methods: {
+    doStep() {
+      let symbol = this.cells[this.headPosition];       // The symbol we're reading
+      let state = this.states[this.currentState];       // The state we're in 
+      console.log(state);
+      console.log(symbol);
+      for (let i in state.tuples) {                     // Looking at each tuple in that state
+        if (state.tuples[i].read == symbol) {           // Finding the tuple relating to the symbol we read
+
+          if (state.tuples[i].action == 'R') {          // Handling 'R' actions
+            this.headPosition++;
+          } else if (state.tuples[i].action == 'L') {   // Handling 'L' actions
+            this.headPosition--;
+          } else {                                      // Handling all write actions
+            Vue.set(this.cells, this.headPosition, state.tuples[i].action);
+          }
+
+          this.currentState = state.tuples[i].goto;     // change states
+        }
+      }
+    }
   }
 }
 </script>
@@ -103,22 +170,30 @@ div {
   font-family: VCR;
   top: 0px;
   width: calc(100% - 100px);
-  height: calc(100% - 200px); // Needed to account for padding. Why 200 and not 100? Gaps :O
+  height: calc(100% - 100px); 
   position: absolute;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 5% 25% 70%;
+  grid-template-columns: .20fr .40fr .40fr;
+  grid-template-rows: .05fr .25fr .15fr .15fr .40fr;
   grid-column-gap: 50px;
   grid-row-gap: 50px;
   padding: 50px;
   grid-template-areas: 
-      "header header header"
-      "machine machine machine"
-      "about tuples diagram";
+      "header   header  header"
+      "machine  machine machine"
+      "controls tuples  diagram"
+      "alphabet tuples  diagram"
+      "about    tuples  diagram";
 }
 
+#controls {
+  grid-area: controls;
+}
 #alphabet {
-  grid-area: about
+  grid-area: alphabet;
+}
+#about {
+  grid-area: about;
 }
 #machine-display {
   overflow-y: scroll;
@@ -180,7 +255,7 @@ div {
   height: 30px;
   top: 55px;
   position: absolute;
-  transition-duration: 1s;
+  transition-duration: .5s;
 }
 
 //
@@ -203,7 +278,33 @@ div {
   border: solid black 2px;
   width: 95%;
   margin: 20px 2.5%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.state-container-label {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  font-size: 12px;
+}
+.state-tuple-display {
+  display: flex;
+  justify-content: space-around;
+  
+  span {
+    padding: 5px;
+  }
+  .tuple-value {
+    border-bottom: solid 2px black;
+  }
+}
+
+.control-button {
+  cursor: pointer;
   height: 30px;
+  margin-top: 5px;
 }
 
 </style>
