@@ -1,3 +1,7 @@
+<!---
+  This file is just for the header part of the turing windows.
+                                                                -->
+
 <template>
 <div class="turing-window-header">
       <div class="turing-window-header-lines">

@@ -3,9 +3,9 @@
   <div id="machine-display" class="turing-window">
     <turing-header text="YOUR MACHINE"></turing-header>
     <div class="turing-window-content">
-      <img src="../../../static/turing/icons/edit.png" id="machine-edit-button" v-if="!inputMode"
+      <img src="../../../static/turing/icons/edit.png" id="machine-edit-button" v-if="!inputMode && !machineRunning"
         @click="inputMode = !inputMode">
-      <img src="../../../static/turing/icons/okay.png" id="machine-edit-button" v-else
+      <img src="../../../static/turing/icons/okay.png" id="machine-edit-button" v-else-if="!machineRunning"
         @click="inputMode = !inputMode">
       <div id="cells">
         <div class="cell" v-for="(cell, i) in cells" :style="{
@@ -18,7 +18,7 @@
         <div class="machine" :style="{
             left: headPosition * 50 + 'px'
           }">
-        
+          Q{{currentState}}
         </div>
       </div>
     </div>
@@ -27,10 +27,15 @@
   <div id="controls" class="turing-window">
     <turing-header text="CONTROLS"></turing-header>
     <div class="turing-window-content">
-      <img src="../../../static/turing/icons/play.png" class="control-button" @click="beginMachine()" v-if="!machinePlay">
+      <img src="../../../static/turing/icons/rw.png" class="control-button" @click="rewind()">
+      <img src="../../../static/turing/icons/back.png" class="control-button disabled-icon">
+
+      <img src="../../../static/turing/icons/play.png" class="control-button" @click="beginMachine(1000)" v-if="status != 'running'">
       <img src="../../../static/turing/icons/pause.png" class="control-button" @click="pauseMachine()" v-else>
+
       <img src="../../../static/turing/icons/next.png" class="control-button" @click="doStep()">
-      <img src="../../../static/turing/icons/ff.png" class="control-button">
+
+      <img src="../../../static/turing/icons/ff.png" class="control-button" @click="beginMachine(250)">
     </div>
   </div>
 
@@ -44,6 +49,7 @@
   <div id="about" class="turing-window">
     <turing-header text="ABOUT"></turing-header>
     <div class="turing-window-content">
+      <div>status: {{ status }}</div>
       <div>total steps: {{totalSteps}}</div>
     </div>
   </div>
@@ -61,21 +67,56 @@
         </div>
 
 
-        <div class="state-container" v-for="(state, i) in states" :style="{
-          height: state.tuples.length * 40 + 'px'
+        <div class="state-container" v-for="(state, i) in states" 
+        :class="{ 'selected-border': i == currentState, 'disabled-border': machineRunning }"
+        :style="{
+          height: (state.tuples.length * 40) + 40 + 'px'
         }"> <!-- Calculating height this way so we can match height with the description box easily -->
-          <div class="state-container-label">Q{{i}} tuples</div>
-          <div class="state-tuple-display" v-for="tuple in state.tuples">
+          <div class="state-container-label"
+            :class="{ 'selected-text': i == currentState, 'disabled-text': machineRunning }"
+          >
+            Q{{i}} tuples
+          </div>
+          <div class="state-tuple-display" v-for="(tuple, j) in state.tuples"
+            :class="{ 'selected-text': j == currentTuple && i == currentState, 
+              'disabled-text': machineRunning }">
             <span>&lt;</span>
             <span class="tuple-value">Q{{i}}</span>
-            <span class="tuple-value">{{tuple.read}}</span>
-            <span class="tuple-value">{{tuple.action}}</span>
-            <span class="tuple-value">Q{{tuple.goto}}</span>
+            <span class="tuple-value" v-if="machineRunning">{{tuple.read}}</span>
+            <input v-else v-model="tuple.read" maxlength="1" onclick="this.select()">
+            <span class="tuple-value" v-if="machineRunning">{{tuple.action}}</span>
+            <input v-else v-model="tuple.action" maxlength="1" onclick="this.select()">
+            <span class="tuple-value" v-if="machineRunning">Q{{tuple.goto}}</span>
+            <input v-else v-model="tuple.goto" maxlength="1" onclick="this.select()">
             <span>&gt;</span>
           </div>
+
+          <button class="turing-button" style="width:100px;"
+            :class="{ 'disabled': machineRunning }"
+            @click="addTuple(i)">
+            Add Tuple
+          </button>
         </div>
+        <button class="turing-button" style="width:100px;"
+          :class="{ 'disabled': machineRunning }"
+          @click="addState()">
+          Add State
+        </button>
 
 
+      </div>
+
+      <div id="tuple-description-column">
+        <div id="column-header">
+          <span>descriptions</span>
+          <div class="state-container" v-for="(state, i) in states" 
+            :class="{ 'selected-border': i == currentState, 'disabled-border': machineRunning }"
+            :style="{
+              height: (state.tuples.length * 40) + 40 + 'px'
+            }">
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -98,8 +139,10 @@ export default {
     return {
       // Machine variables:
       cells: [],
+      startInput: [],
       headPosition: 3,
       currentState: 0,
+      currentTuple: 0,
       states: [
         {
           description: '',
@@ -123,8 +166,13 @@ export default {
 
       // Menu options:
       inputMode: false,
-      machinePlay: false,
+      status: 'editable'
 
+    }
+  },
+  computed: {
+    machineRunning() {  // Whether or not the machine is in the middle of a run
+      return (this.totalSteps > 0);
     }
   },
   mounted() {
@@ -145,6 +193,8 @@ export default {
       for (let i in state.tuples) {                     // Looking at each tuple in that state
         if (state.tuples[i].read == symbol) {           // Finding the tuple relating to the symbol we read
 
+          this.currentTuple = i;
+
           if (state.tuples[i].action == 'R') {          // Handling 'R' actions
             this.headPosition++;
           } else if (state.tuples[i].action == 'L') {   // Handling 'L' actions
@@ -157,21 +207,54 @@ export default {
         }
       }
     },
-    beginMachine() {
-      this.machinePlay = true;
-      this.machineLoop(1000)
+    beginMachine(timeBetweenSteps) {
+      if (this.status == 'running') { // If it's already playing, don't play it again. 
+        return;
+      }
+      if (this.status == 'editable') {
+        this.startInput = this.cells.slice(0);
+      }
+      this.status = 'running';
+      this.machineLoop(timeBetweenSteps)
     },
-    machineLoop(speed) {
+    machineLoop(timeBetweenSteps) {
       this.doStep();
       setTimeout(() => {
-        if (this.machinePlay) {
-          this.machineLoop(speed);
+        if (this.status == 'running') {
+          this.machineLoop(timeBetweenSteps);
         }
-      }, speed);
+      }, timeBetweenSteps);
     },
     pauseMachine() {
-      this.machinePlay = false;
-    }
+      this.status = 'paused';
+    },
+
+    addTuple(state) {
+      if (this.machineRunning) { // You can't add a tuple in the middle of the machine
+        return;
+      }
+      this.states[state].tuples.push({
+        read: 'B',
+        action: 'B',
+        goto: state
+      })
+    },
+    addState() {
+      this.states.push({
+        description: '',
+          tuples: [
+            {
+              read: 'B',
+              action: 'B',
+              goto: this.states.length - 1
+            },
+          ]
+      })
+    },
+    rewind() {
+      this.cells = this.startInput;
+      this.headPosition = 3;
+    },
   }
 }
 </script>
@@ -275,9 +358,10 @@ div {
 }
 
 .machine {
-  border-bottom: solid red 2px;
+  border-bottom: solid #05B9BC 8px;
+  padding-top: 5px;
   width: 30px;
-  height: 30px;
+  height: 25px;
   top: 55px;
   position: absolute;
   transition-duration: .5s;
@@ -297,6 +381,9 @@ div {
   grid-template-columns: 60% 40%;
   width: 100%;
   height: calc(100% - 20px);
+}
+#tuple-description-column {
+  grid-column: 2/3;
 }
 
 .state-container {
@@ -324,12 +411,48 @@ div {
   .tuple-value {
     border-bottom: solid 2px black;
   }
+  input {
+    width: 15px;
+    font-family: VCR;
+    text-align: center;
+  }
 }
 
 .control-button {
   cursor: pointer;
   height: 30px;
   margin-top: 5px;
+}
+
+.disabled-border {
+  border-color: rgba(0,0,0,.3);
+}
+.disabled-text {
+  color: rgba(0,0,0,.3);
+  .tuple-value {
+    border-color: rgba(0,0,0,.3);
+  }
+}
+.disabled-icon, .disabled {
+  opacity: .3;
+  cursor: default;
+}
+.selected-border {
+  border-color: black;
+}
+.selected-text {
+  color: black;
+  .tuple-value {
+    border-color: black;
+  }
+}
+
+.turing-button {
+  font-family: VCR;
+  border: solid 2px black;
+  align-self: center;
+  padding: 5px;
+  cursor: pointer;
 }
 
 </style>
