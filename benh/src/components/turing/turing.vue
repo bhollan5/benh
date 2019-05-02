@@ -2,18 +2,23 @@
 <div id="turing-interface">
   <div id="machine-display" class="turing-window">
     <turing-header text="YOUR MACHINE"></turing-header>
+
     <div class="turing-window-content">
-      <img src="../../../static/turing/icons/edit.png" id="machine-edit-button" v-if="!inputMode && !machineRunning"
+
+      <!--
+      <img src="../../../static/turing/icons/edit.png" id="machine-edit-button" v-if="!machineRunning"
         @click="inputMode = !inputMode">
       <img src="../../../static/turing/icons/okay.png" id="machine-edit-button" v-else-if="!machineRunning"
         @click="inputMode = !inputMode">
+      -->
+
       <div id="cells">
         <div class="cell" v-for="(cell, i) in cells" :style="{
             left: i * 50 + 'px'
           }">
-          <input v-if="inputMode" v-model="cells[i]" maxlength="1" onclick="this.select()"
-            onkeyup="this.value = this.value.toUpperCase();">
-          <span v-if="!inputMode && cell != 'B'">{{cell}}</span>
+          <input v-if="!machineRunning" v-model="cells[i]" maxlength="1" onclick="this.select()"
+            @keyup="changeInput(i)">
+          <span v-else>{{cell}}</span>
         </div>
         <div class="machine" :style="{
             left: headPosition * 50 + 'px'
@@ -21,6 +26,7 @@
           Q{{currentState}}
         </div>
       </div>
+
     </div>
   </div>
 
@@ -30,7 +36,7 @@
       <img src="../../../static/turing/icons/rw.png" class="control-button" @click="rewind()">
       <img src="../../../static/turing/icons/back.png" class="control-button disabled-icon">
 
-      <img src="../../../static/turing/icons/play.png" class="control-button" @click="beginMachine(1000)" v-if="status != 'running'">
+      <img src="../../../static/turing/icons/play.png" class="control-button" @click="beginMachine(1000)" v-if="paused">
       <img src="../../../static/turing/icons/pause.png" class="control-button" @click="pauseMachine()" v-else>
 
       <img src="../../../static/turing/icons/next.png" class="control-button" @click="doStep()">
@@ -166,14 +172,25 @@ export default {
 
       // Menu options:
       inputMode: false,
-      status: 'editable'
+      stopMachine: false,
+      paused: true,
+
+      machineSpeed: 1000, // Measured in milliseconds between steps
 
     }
   },
   computed: {
     machineRunning() {  // Whether or not the machine is in the middle of a run
       return (this.totalSteps > 0);
-    }
+    },
+    status() {
+      if (this.machineRunning) {
+        return 'running';
+      } else {
+        return 'editable';
+      }
+    } 
+
   },
   mounted() {
     for (let i = 0; i < 100; i++) {
@@ -193,8 +210,6 @@ export default {
       for (let i in state.tuples) {                     // Looking at each tuple in that state
         if (state.tuples[i].read == symbol) {           // Finding the tuple relating to the symbol we read
 
-          this.currentTuple = i;
-
           if (state.tuples[i].action == 'R') {          // Handling 'R' actions
             this.headPosition++;
           } else if (state.tuples[i].action == 'L') {   // Handling 'L' actions
@@ -206,27 +221,46 @@ export default {
           this.currentState = state.tuples[i].goto;     // change states
         }
       }
+      for (let i in state.tuples) {                     // Looking at each tuple in that state
+        if (state.tuples[i].read == this.cells[this.headPosition]) {
+          this.currentTuple = i;
+        }
+      }
     },
     beginMachine(timeBetweenSteps) {
-      if (this.status == 'running') { // If it's already playing, don't play it again. 
+      this.machineSpeed = timeBetweenSteps;
+      if (!this.paused) { // If it's already playing, don't play it again. 
         return;
       }
-      if (this.status == 'editable') {
-        this.startInput = this.cells.slice(0);
-      }
-      this.status = 'running';
-      this.machineLoop(timeBetweenSteps)
+      // Save the current input before we start
+      this.startInput = this.cells.slice(0);
+      this.stopMachine = false;
+      
+      this.machineLoop()
     },
-    machineLoop(timeBetweenSteps) {
+    machineLoop() {
+      this.paused = false;
+      // Stop the  machine if we're not in running mode
+      if (this.stopMachine) {
+        this.stopMachine = false;
+        this.paused = true;
+        return;
+      }
       this.doStep();
       setTimeout(() => {
-        if (this.status == 'running') {
-          this.machineLoop(timeBetweenSteps);
-        }
-      }, timeBetweenSteps);
+        this.machineLoop();
+      }, this.machineSpeed);
     },
     pauseMachine() {
-      this.status = 'paused';
+      this.stopMachine = true;
+    },
+
+    // Handles
+    changeInput(i) {
+      console.log("hi!");
+      Vue
+      this.cells[i] = this.cells[i].toUpperCase();
+      // input.value = input.value.toUpperCase();
     },
 
     addTuple(state) {
@@ -240,6 +274,9 @@ export default {
       })
     },
     addState() {
+      if (this.machineRunning) {
+        return;
+      }
       this.states.push({
         description: '',
           tuples: [
@@ -254,6 +291,8 @@ export default {
     rewind() {
       this.cells = this.startInput;
       this.headPosition = 3;
+      this.totalSteps = 0;
+      this.stopMachine = true;
     },
   }
 }
