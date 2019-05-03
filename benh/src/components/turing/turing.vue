@@ -115,11 +115,12 @@
       <div id="tuple-description-column">
         <div id="column-header">
           <span>descriptions</span>
-          <div class="state-container" v-for="(state, i) in states" 
+          <div class="state-container description" v-for="(state, i) in states" 
             :class="{ 'selected-border': i == currentState, 'disabled-border': machineRunning }"
             :style="{
               height: (state.tuples.length * 40) + 40 + 'px'
             }">
+            <textarea></textarea>
 
           </div>
         </div>
@@ -196,6 +197,9 @@ export default {
     for (let i = 0; i < 100; i++) {
       this.cells.push('B');
     }
+    window.onbeforeunload = function() {
+      return true;
+    };
   },
   components: {
     turingHeader
@@ -257,9 +261,9 @@ export default {
 
     // Handles
     changeInput(i) {
-      console.log("hi!");
-      Vue
-      this.cells[i] = this.cells[i].toUpperCase();
+      // console.log("hi!");
+      // Vue
+      // this.cells[i] = this.cells[i].toUpperCase();
       // input.value = input.value.toUpperCase();
     },
 
@@ -492,6 +496,14 @@ div {
   align-self: center;
   padding: 5px;
   cursor: pointer;
+}
+
+.description {
+  textarea {
+    font-family: VCR;
+
+    height: 100%;
+  }
 }
 
 </style>
